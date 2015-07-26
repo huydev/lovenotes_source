@@ -1,1 +1,1 @@
-![Lovenotes](http://lovenotes.me) 源文件
+[Lovenotes](http://lovenotes.me) 源文件
