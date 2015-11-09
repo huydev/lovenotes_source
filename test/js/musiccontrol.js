@@ -1,4 +1,4 @@
-document.getElementById('musicbox').onclick = function(){
+document.getElementById('musicbox').onclick = function(e){
 	var audio = document.getElementById('music-elem');
 	var isPaused = audio.paused;
 	if(isPaused){
@@ -16,24 +16,50 @@ document.getElementById('musicbox').onclick = function(){
 		this.style.oAnimationPlayState = "paused";
 		this.style.msAnimationPlayState = "paused";
 	}
+	e.stopPropagation();
 };
 
-var sUserAgent = navigator.userAgent.toLowerCase();
-var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-var bIsAndroid = sUserAgent.match(/android/i) == "android";
-var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
-if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
-    document.getElementsByTagName('body')[0].ontouchstart = function(){
-		document.getElementById('musicbox').click();
-		document.getElementsByTagName('body')[0].ontouchstart = null;
-	}
-} else {
-    window.onload = function(){
-		document.getElementById('musicbox').click();
-	}
+setTimeout(function(){
+	window.scrollTo(0,1);
+},0);
+document.getElementById('music-elem').play();
+document.addEventListener("WeixinJSBridgeReady", function () {
+	WeixinJSBridge.invoke('getNetworkType', {}, function (e) {
+    	document.getElementById('music-elem').play();
+	});
+}, false);
+
+
+
+document.onclick = function(e){
+	var x = e.clientX,
+		y = e.clientY;
+	var newColor = 'hsl(' + Math.round(Math.random() * 255) + ', 46%, 42%)';
+
+	var cursorDiv = document.createElement('div');
+	cursorDiv.id = 'cursorDiv';
+	cursorDiv.style.top = y + 'px';
+	cursorDiv.style.left = x + 'px';
+	cursorDiv.style.backgroundColor = newColor;
+	document.querySelector('body').appendChild(cursorDiv);
+	setTimeout(function(){
+		document.querySelector('body').removeChild(cursorDiv);
+	}, 500);
+
+	var clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+	var clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+	var oDiv = document.createElement('div');
+	oDiv.id = 'oDiv';
+	oDiv.style.width = oDiv.style.height = (clientWidth > clientHeight ? clientWidth * 2.4 + 'px' : clientHeight * 2.4 + 'px');
+	oDiv.style.marginLeft = oDiv.style.marginTop = (clientWidth > clientHeight ? '-' + clientWidth * 1.2 + 'px' : '-' + clientHeight * 1.2 + 'px');
+	oDiv.style.top = y + 'px';
+	oDiv.style.left = x + 'px';
+	oDiv.style.backgroundColor = newColor;
+	document.querySelector('body').appendChild(oDiv);
+	oDiv.addEventListener('webkitAnimationEnd', function(){
+		document.querySelector('body').style.backgroundColor = newColor;
+		document.querySelector('body').removeChild(this);
+	});
+	oDiv.className = 'animation';
 }
